@@ -2,8 +2,18 @@
 	import bot from '$lib/static/bot.png';
 
 	let items = [
-		{ name: 'MemoryStacker', image: bot, link: '/memorystacker', text: 'Test' },
-		{ name: 'Antivirus', image: bot, link: '/antivirus', text: 'Test' }
+		{
+			name: 'MemoryStacker',
+			image: bot,
+			link: '/memorystacker',
+			text: 'Order the names based on relevancy or importance!'
+		},
+		{
+			name: 'Antivirus',
+			image: bot,
+			link: '/antivirus',
+			text: 'Find and remove any irrelevant nodes!'
+		}
 	];
 </script>
 

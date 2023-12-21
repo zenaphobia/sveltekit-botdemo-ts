@@ -20,7 +20,10 @@
 </script>
 
 <div class="flex flex-col justify-center p-16 gap-6">
-	<h1 class="text-6xl font-bold text-center">Memorystack</h1>
+	<div class="flex flex-col gap-4 text-center">
+		<h1 class="text-6xl font-bold text-center">Memorystack</h1>
+		<p>Order the names based on relevancy or importance!</p>
+	</div>
 	<div class="flex flex-col justify-center text-center items-center">
 		<h3 class="text-2xl font-bold text-black/75">Subject</h3>
 		<h4 class="text-3xl font-medium">Michael Jordan</h4>
