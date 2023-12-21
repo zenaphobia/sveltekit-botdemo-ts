@@ -20,7 +20,7 @@
 		group: null
 	};
 
-	$: console.log(selectedItem);
+	$: console.log(items);
 
 	function generateRandomHexAsString() {
 		let hex = '#';
@@ -30,11 +30,9 @@
 		return hex;
 	}
 
-	let twelveRandomObjectNodeName = [
+	let randomObjectNames = [
 		'Antivirus',
-		'Computer',
 		'CPU',
-		'Firewall',
 		'GPU',
 		'Hard Drive',
 		'Keyboard',
@@ -81,19 +79,22 @@
 
 	function removeItem(options: fabric.IEvent<MouseEvent>) {
 		if (!selectedItem.group) return;
+		items = items.filter((item) => item !== selectedItem.group);
 		deletedItems.push(selectedItem.group);
 		canvas.remove(selectedItem.group);
 	}
 
 	function undoDelete() {
 		if (deletedItems.length === 0) return;
-		canvas.add(deletedItems.pop() as fabric.Object);
+		let item = deletedItems.pop();
+		items = [item, ...items];
+		canvas.add(item as fabric.Object);
 	}
 
-	for (let i = 0; i < twelveRandomObjectNodeName.length; i++) {
+	for (let i = 0; i < randomObjectNames.length; i++) {
 		let angle = Math.random() * 360;
 		let object = new fabric.Rect({
-			name: twelveRandomObjectNodeName[i],
+			name: randomObjectNames[i],
 			width: 100,
 			height: 100,
 			fill: generateRandomHexAsString(),
@@ -108,7 +109,7 @@
 		object.setCoords();
 		text.setCoords();
 		let group = new fabric.Group([object, text]);
-		items.push(group);
+		items = [group, ...items];
 	}
 	onMount(() => {
 		canvas = new fabric.Canvas(el as HTMLCanvasElement, {
@@ -134,7 +135,6 @@
 		});
 
 		canvas.on('mouse:down', (options) => {
-			console.log(options);
 			let target = findItemsInGroup(items, options);
 			if (!target) return;
 			target.set({
@@ -144,7 +144,6 @@
 				name: target.name ?? '',
 				group: options.target as fabric.Group
 			};
-			console.log(target);
 		});
 	});
 </script>
@@ -153,13 +152,33 @@
 	<title>Synapse Scramble: Antivirus</title>
 </svelte:head>
 
-<section class="p-4">
-	<h1 class="text-6xl font-bold text-center">Antivirus</h1>
-	<p class="text-center">Find and remove any irrelevant nodes!</p>
+<section class="flex flex-col gap-12 p-4">
+	<div>
+		<h1 class="text-6xl font-bold text-center">Antivirus</h1>
+		<p class="text-center">Find and remove any irrelevant nodes to fix the prompt!</p>
+	</div>
 </section>
 
-<section class="flex justify-center p-12">
+<section
+	class="flex flex-col-reverse gap-12 justify-center items-center p-12 2xl:flex-row 2xl:gap-4"
+>
 	<canvas class="overflow-hidden rounded-lg" bind:this={el} />
+
+	<div class="flex flex-row gap-4 2xl:flex-col max-w-[1000px]">
+		<div class="flex flex-col gap-1 bg-slate-100 p-4 rounded-lg">
+			<h4 class="text-lg font-bold text-slate-800">Test Prompt</h4>
+			<p>Can you give me a list of typical PC components?</p>
+		</div>
+		<div class="flex flex-col gap-1 bg-slate-200 p-4 rounded-lg">
+			<h4 class="text-lg font-bold text-slate-800">Output</h4>
+			<p>Here's a list of typical computer parts and components:</p>
+			<ul class="flex flex-wrap gap-x-6 gap-y-2 list-disc 2xl:flex-nowrap 2xl:gap-2 2xl:flex-col">
+				{#each items as item}
+					<li class="ml-4">{item._objects[0].name}</li>
+				{/each}
+			</ul>
+		</div>
+	</div>
 </section>
 
 <div class="flex flex-col items-center justify-center gap-4">
